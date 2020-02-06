@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <openerp>
+        <data>
+            <menuitem
+                id="menu_dev_parent"
+                name="Developments"
+                parent="mail.mail_feeds"
+                sequence="20"
+            />
+            <!-- Action to open Developments requests list -->
+            <act_window
+                id="action_dev_manager"
+                name="Developments Manager"
+                res_model="dev.request"
+                view_mode="tree,form"
+            />
+            <!-- Menu item to open Developments requests list -->
+            <menuitem
+                id="menu_dev_manager"
+                name="Developments Manager"
+                parent="menu_dev_parent"
+                sequence="20"
+                action="action_dev_manager"
+            />
+            <!-- Action to open Developments requests list -->
+            <act_window
+                id="action_dev_man_tasks"
+                name="Developments Manager Tasks"
+                res_model="dev.request.task"
+                view_mode="kanban,tree,form,graph"
+            />
+            <!-- Menu item to open Developments requests list -->
+            <menuitem
+                id="menu_dev_man_tasks"
+                name="Developments Manager Tasks"
+                parent="menu_dev_parent"
+                sequence="20"
+                action="action_dev_man_tasks"
+            />
+            <record id="view_form_dev_req" model="ir.ui.view">
+                <field name="name">Development Request Form</field>
+                <field name="model">dev.request</field>
+                <field name="arch" type="xml">
+                    <form string="Request">
+                        <header>
+                        </header>
+                        <sheet string="Request">
+                            <group name="group_top">
+
+                            <group name="group_left">
+                                <field name="name"/>
+                                <field name="description"/>
+                                <field name="client_id"/>
+                            </group>
+                            <group name="group_right">
+                                <field name="date_creation"/>
+                                <field name="date_release"/>
+                                <field name="active" readonly="1" />
+                            </group>
+                            </group>
+                            <notebook colspan="1">
+                                <page string="Tareas">
+                                        <field name="task_ids" nolabel="1" widget="one2many_list">
+                                            <tree string="Tareas" editable="bottom">
+                                                <field name="name"/>
+                                                <field name="devreq_id" invisible="1"/>
+                                                <field name="date_deadline"/>
+                                                <field name="horas"/> 
+                                                <field name="user_id"/>
+                                                <field name="is_done"/>                                   
+                                            </tree>
+                                        </field>                            
+                                </page>
+                                <!-- <page string="Kanban">
+                                        <field name="context">{'search_default_group_dreq_id': 1}
+                                             <kanban default_group_by="kanban_stage" quick_create="false">
+                                                    <templates>
+                                                        <t t-name="kanban-box">
+                                                            <div class="oe_kanban_card">
+                                                                <div class="oe_kanban_content">
+                                                          
+                                                                    <h4><a type="open">
+                                                                        <field name="name" />
+                                                                        </a></h4>
+                                                                        <ul>
+                                                                            <li><field name="user_id" /></li>
+                                                                            <li><field name="date_deadline" /></li>
+                                                                        </ul>
+                                                                        <div class="oe_kanban_bottom_right">
+                                                                            <field name="kanban_state" widget="kanban_state_selection"/>
+                                                                        </div>
+                                                                        <div class="oe_kanban_footer_left">
+                                                                            <field name="priority" widget="priority"/>
+                                                                        </div>
+                                                                </div>
+                                                            </div>
+                                                    </t>
+                                                </templates>
+                                            </kanban>
+                                        </field>                            
+                                </page> -->
+                            </notebook>
+                        </sheet>                   
+                    </form>
+                </field>
+            </record>
+            <record id="view_tree_dev_man" model="ir.ui.view">
+                <field name="name">Dev requests</field>
+                <field name="model">dev.request</field>
+                <field name="arch" type="xml">
+                    <tree>
+                        <field name="name"/>
+                        <field name="client_id"/>
+                        <field name="date_release"/>
+                    </tree>
+                </field>
+            </record> 
+            <record id="view_graph_dev_man" model="ir.ui.view">
+                <field name="name">Dev requests tasks</field>
+                <field name="model">dev.request.task</field>
+                <field name="arch" type="xml">
+                    <graph string="Horas por Responsable">
+                        <field name="user_id"/>
+                        <field name="horas" type="measure"/>
+                    </graph>
+                </field>
+            </record> 
+            <record id="Developments Task Kanban" model="ir.ui.view">
+                <field name="name">Developments Task Kanban</field>
+                <field name="model">dev.request.task</field>
+                <field name="arch" type="xml">
+                <!-- vacío por ahora, pero el Kanban irá aquí! -->
+                    <kanban default_group_by="devreq_id" default_order="date_deadline" quick_create="false">
+                        <templates>
+                            <t t-name="kanban-box">
+                            <div class="oe_kanban_card">
+                                <div class="oe_kanban_content">
+                                    <!-- Option menu will go here! -->
+                                    <h4><a type="open">
+                                        <field name="name" />
+                                        </a></h4>
+                                        <ul>
+                                            <li><field name="user_id" /></li>
+                                            <li><field name="date_deadline" /></li>
+                                        </ul>
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="kanban_state" widget="kanban_state_selection"/>
+                                        </div>
+                                        <div class="oe_kanban_footer_left">
+                                            <field name="priority" widget="priority"/>
+                                        </div>
+                                </div>
+                            </div>
+                            <!-- <div class="oe_kanban_vignette">
+                                <img t-att-src="kanban_image('res.partner',
+                                                            'image_medium',
+                                                            record.id.value)"
+                                    class="oe_kanban_image"/>
+                                    <div class="oe_kanban_details">
+                                        
+                                        <h4><a type="open">
+                                            <field name="name"/> </a></h4>
+                                            
+                                            <ul>
+                                                <li><field name="user_id" /></li>
+                                                <li><field name="date_deadline"/></li>
+                                            </ul>
+                                            <field name="kanban_state" widget="kanban_state_selection"/>
+                                            <field name="priority" widget="priority"/>
+                                    </div>
+                                </div> -->
+                            </t>
+                        </templates>
+                    </kanban>
+                </field>
+            </record>
+            <!-- <record id="view_filter_devman_task" model="ir.ui.view">
+                <field name="name">Developments Task Filter</field>
+                <field name="model">dev.request.task</field>
+                <field name="arch" type="xml">
+                    <search>
+                        <filter name="group_dreq_id" string="Request" context="{'group_by':'devreq_id'}"/>
+                    </search>
+                </field>
+            </record> -->
+        </data>
+    </openerp>
